@@ -645,19 +645,11 @@ function toggleKnowledge(idx) {
 }
 
 // ===== 塑形 =====
-function getDayOfWeek() {
-  const days = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
-  return days[new Date().getDay()];
-}
-
 function renderFitness(mod) {
-  const dayName = getDayOfWeek();
-  const daily = mod.daily || {};
-  const t = daily[dayName] || daily['周一'];
-  const dayLabel = dayName;
+  const t = mod.today;
   let html = `<div class="content-card" style="background:linear-gradient(135deg,#FF9E80,#FFAB91);color:#fff;">
-    <div style="font-size:18px;font-weight:800;margin-bottom:4px;">${dayLabel} · 今日重点：${t.focus}</div>
-    <div style="font-size:13px;opacity:0.9;">\u23f1 热身 + 力量训练 + 拉伸</div>
+    <div style="font-size:18px;font-weight:800;margin-bottom:4px;">今日重点：${t.focus}</div>
+    <div style="font-size:13px;opacity:0.9;">\u23f1 热身3分钟 + 力量训练15分钟 + 有氧15分钟 + 拉伸3分钟</div>
   </div>
   <div class="content-card">
     <div class="card-title"><span class="emoji">\u{1f525}</span> 热身</div>

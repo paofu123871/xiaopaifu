@@ -18,6 +18,7 @@ function loadData() {
   } catch (e) { checkinData = {}; }
   // 尝试从云端同步
   if (GIST_TOKEN) syncFromCloud();
+  startAutoPull();  // 开启定时自动拉取，手机打卡后电脑无需手动刷新
 }
 
 function saveData() {
@@ -49,14 +50,17 @@ async function syncFromCloud() {
     const cloudData = JSON.parse(file.content);
     const cloudHash = JSON.stringify(cloudData);
     
-    // 如果云端数据比本地新，用云端的
+    // 如果云端数据有变化，合并并刷新
     if (cloudHash !== _lastCloudHash) {
       _lastCloudHash = cloudHash;
-      // 合并策略：取日期最多的
+      // 合并策略：取两端所有日期的打卡记录
       const merged = mergeData(checkinData, cloudData);
       checkinData = merged;
       localStorage.setItem('xiaopaifu_data', JSON.stringify(checkinData));
-      renderNav(); renderMain();
+      renderNav();
+      // 若用户正在输入文字，先不重绘主区域，避免打断输入
+      const editing = document.activeElement && (document.activeElement.tagName === 'TEXTAREA' || document.activeElement.tagName === 'INPUT');
+      if (!editing) renderMain();
     }
   } catch(e) { console.log('Sync from cloud error:', e); }
 }
@@ -67,14 +71,29 @@ async function syncToCloud() {
   try {
     const gistId = localStorage.getItem('xiaopaifu_gist_id');
     if (!gistId) { await findOrCreateGist(); return; }
-    
+
+    // 先拉取云端最新数据，再合并本地，避免覆盖其他设备的打卡（读-合并-写）
+    let cloudData = {};
+    try {
+      const r = await fetch('https://api.github.com/gists/' + gistId, {
+        headers: { 'Authorization': 'token ' + GIST_TOKEN }
+      });
+      if (r.ok) {
+        const g = await r.json();
+        const f = g.files && g.files[GIST_FILENAME];
+        if (f && f.content) cloudData = JSON.parse(f.content);
+      }
+    } catch (e) { console.log('Pre-push pull failed, use local:', e); }
+
+    const merged = mergeData(checkinData, cloudData); // 本地优先
+    checkinData = merged;
     const dataStr = JSON.stringify(checkinData);
     if (dataStr === _lastCloudHash) return; // 没变化，不同步
-    
+
     const body = {
       files: { [GIST_FILENAME]: { content: dataStr } }
     };
-    
+
     const resp = await fetch('https://api.github.com/gists/' + gistId, {
       method: 'PATCH',
       headers: {
@@ -83,9 +102,11 @@ async function syncToCloud() {
       },
       body: JSON.stringify(body)
     });
-    
+
     if (resp.ok) {
       _lastCloudHash = dataStr;
+      localStorage.setItem('xiaopaifu_data', dataStr);
+      renderNav();
       console.log('Synced to cloud OK');
     } else {
       console.log('Sync failed:', resp.status);
@@ -166,6 +187,7 @@ function setSyncToken(token) {
   GIST_TOKEN = token;
   localStorage.setItem('xiaopaifu_token', token);
   findOrCreateGist();
+  startAutoPull();
   return true;
 }
 
@@ -182,7 +204,45 @@ function clearSync() {
   localStorage.removeItem('xiaopaifu_token');
   localStorage.removeItem('xiaopaifu_gist_id');
   GIST_TOKEN = '';
+  if (_autoPullTimer) { clearInterval(_autoPullTimer); _autoPullTimer = null; }
   alert('已清除同步设置');
+}
+
+// ===== 同步增强：自动拉取 + 立即同步 + 防覆盖 =====
+const AUTO_PULL_INTERVAL = 15000;   // 每 15 秒自动从云端拉取一次
+let _autoPullTimer = null;
+
+function startAutoPull() {
+  if (!GIST_TOKEN) return;
+  if (_autoPullTimer) clearInterval(_autoPullTimer);
+  _autoPullTimer = setInterval(() => {
+    if (GIST_TOKEN && !document.hidden) syncFromCloud();
+  }, AUTO_PULL_INTERVAL);
+}
+
+// 轻量提示，避免弹出 alert 打断操作
+function showToast(msg) {
+  let t = document.getElementById('xpf-toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'xpf-toast';
+    t.style.cssText = 'position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:rgba(0,0,0,.8);color:#fff;padding:8px 16px;border-radius:20px;font-size:13px;z-index:9999;transition:opacity .3s;pointer-events:none;';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.opacity = '1';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => { t.style.opacity = '0'; }, 1500);
+}
+
+// 立即双向同步（点 🔄 时调用）
+async function doManualSync() {
+  if (!GIST_TOKEN) { toggleSyncSettings(); return; }
+  showToast('同步中…');
+  await syncFromCloud();
+  await syncToCloud();
+  renderNav(); renderMain();
+  showToast('✅ 同步完成');
 }
 
 // ===== 语音播放（真人MP3） =====
@@ -247,6 +307,7 @@ function renderNav() {
     const checked = todayData[mod.id];
     html += `<div class="nav-item ${currentModule === mod.id ? 'active' : ''}" onclick="switchModule('${mod.id}')"><span class="nav-icon">${mod.icon}</span><span class="nav-label">${mod.name}</span>${checked ? '<span class="nav-badge done"></span>' : ''}</div>`;
   });
+  if (GIST_TOKEN) html += '<div class="sidebar-sync-btn" onclick="doManualSync()" title="立即同步">🔄</div>';
   html += '<div class="sidebar-sync-btn" onclick="toggleSyncSettings()" title="云同步设置">☁️</div>';
   sidebar.innerHTML = html;
 }

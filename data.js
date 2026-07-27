@@ -3,6 +3,48 @@
  * 六大模块每日内容数据
  */
 
+
+// ===== 每日好句（按日期轮换） =====
+const DAILY_QUOTES = [
+  { type: '诗词', text: '长风破浪会有时，直挂云帆济沧海。', author: '李白《行路难》', note: '无论遇到什么困难，都要相信未来' },
+  { type: '诗词', text: '山重水复疑无路，柳暗花明又一村。', author: '陆游《游山西村》', note: '绝境中往往藏着转机' },
+  { type: '诗词', text: '欲穷千里目，更上一层楼。', author: '王之涣《登鹳雀楼》', note: '站得高才能看得远' },
+  { type: '诗词', text: '会当凌绝顶，一览众山小。', author: '杜甫《望岳》', note: '攀登到顶峰，世界都在你脚下' },
+  { type: '诗词', text: '人生如逆旅，我亦是行人。', author: '苏轼《临江仙》', note: '人生就是一场旅行，我们都是过客' },
+  { type: '诗词', text: '莫愁前路无知己，天下谁人不识君。', author: '高适《别董大》', note: '勇敢前行，总会遇到懂你的人' },
+  { type: '诗词', text: '不畏浮云遮望眼，自缘身在最高层。', author: '王安石《登飞来峰》', note: '不被眼前困难迷惑，因为你有更高的视野' },
+  { type: '名言', text: 'Stay hungry, stay foolish.', author: 'Steve Jobs', note: '求知若饥，虚心若愚' },
+  { type: '名言', text: 'The only way to do great work is to love what you do.', author: 'Steve Jobs', note: '成就伟大的唯一途径是热爱你所做的事' },
+  { type: '名言', text: '生活不止眼前的苟且，还有诗和远方。', author: '高晓松', note: '不要让日常琐事磨灭了心中的梦想' },
+  { type: '名言', text: '种一棵树最好的时间是十年前，其次是现在。', author: '非洲谚语', note: '任何时候开始都不晚' },
+  { type: '名言', text: '不是看到了希望才坚持，而是坚持了才看到希望。', author: '佚名', note: '坚持本身就是意义' },
+  { type: '名言', text: '你的时间有限，不要为别人而活。', author: 'Steve Jobs', note: '活出自己的人生' },
+  { type: '名言', text: '人生最大的遗憾，不是我不行，而是我本可以。', author: '佚名', note: '别让犹豫成为永远的遗憾' },
+  { type: '短文', text: '你若爱，生活��里都可爱。你若恨，生活哪里都可恨。你若成长，事事可成长。不是世界选择了你，是你选择了这个世界。', author: '丰子恺', note: '' },
+  { type: '短文', text: '我们曾如此渴望命运的波澜，到最后才发现：人生最曼妙的风景，竟是内心的淡定与从容。', author: '杨绛', note: '' },
+  { type: '短文', text: '一个人知道自己为什么而活，就可以忍受任何一种生活。', author: '尼采', note: '找到人生的意义，什么困难都能扛过去' },
+  { type: '短文', text: '世界上只有一种真正的英雄主义，那就是在认清生活真相之后依然热爱生活。', author: '罗曼·罗兰', note: '真正的勇敢是看透了还依然热爱' },
+  { type: '诗词', text: '采菊东篱下，悠然见南山。', author: '陶渊明《饮酒》', note: '内心的平静是最珍贵的财富' },
+  { type: '诗词', text: '行到水穷处，坐看云起时。', author: '王维《终南别业》', note: '走到绝路就坐下来看云，随遇而安' },
+  { type: '诗词', text: '海内存知己，天涯若比邻。', author: '王勃《送杜少府之任蜀州》', note: '真正的朋友，距离不是问题' },
+  { type: '名言', text: 'The best time to plant a tree was 20 years ago. The second best time is now.', author: 'Chinese Proverb', note: '现在开始，永远不晚' },
+  { type: '名言', text: 'It does not matter how slowly you go as long as you do not stop.', author: 'Confucius', note: '走得慢没关系，只要不停下' },
+  { type: '名言', text: '千里之行，始于足下。', author: '老子《道德经》', note: '再远的路也是一步一步走出来的' },
+  { type: '名言', text: '不积跬步，无以至千里；不积小流，无以成江海。', author: '荀子《劝学》', note: '每天进步一点点，终会到达远方' },
+  { type: '短文', text: '对待生命你不妨大胆冒险一点，因为好歹你要失去它。如果这世界上真有奇迹，那只是努力的另一个名字。', author: '尼采', note: '' },
+  { type: '短文', text: '优于别人，并不高贵。真正的高贵，是优于过去的自己。', author: '海明威', note: '和自己比，才是真正的进步' },
+  { type: '短文', text: '愿中国青年都摆脱冷气，只是向上走，不必听自暴自弃者流的话。能做事的做事，能发声的发声。有一分热，发一分光。', author: '鲁迅', note: '' },
+  { type: '诗词', text: '竹杖芒鞋轻胜马，谁怕？一蓑烟雨任平生。', author: '苏轼《定风波》', note: '豁达面对人生风雨' },
+  { type: '诗词', text: '千磨万击还坚劲，任尔东西南北风。', author: '郑燮《竹石》', note: '经历磨砺才能更坚强' },
+  { type: '名言', text: '成功不是终点，失败也不是终结，唯有勇气才是永恒。', author: '丘吉尔', note: '最重要的是继续前进的勇气' },
+];
+
+function getDailyQuote() {
+  const now = new Date();
+  const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
+  return DAILY_QUOTES[dayOfYear % DAILY_QUOTES.length];
+}
+
 const MODULES_DATA = {
   english: {
     id: 'english',

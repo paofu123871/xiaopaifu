@@ -1,14 +1,189 @@
 let currentModule = null;
 let checkinData = {};
 
-// ===== 数据持久化 =====
+// ===== 数据持久化（本地 + GitHub Gist 云同步） =====
+const GIST_ID = 'YOUR_GIST_ID';        // 首次运行自动创建
+const GIST_FILENAME = 'xiaopaifu_data.json';
+let GIST_TOKEN = '';                    // 从 localStorage 读取
+let _syncTimer = null;
+let _lastCloudHash = '';
+
+// 初始化：加载 token，加载本地数据，尝试从云端同步
 function loadData() {
+  GIST_TOKEN = localStorage.getItem('xiaopaifu_token') || '';
+  // 先从本地加载
   try {
     const saved = localStorage.getItem('xiaopaifu_data');
     if (saved) checkinData = JSON.parse(saved);
   } catch (e) { checkinData = {}; }
+  // 尝试从云端同步
+  if (GIST_TOKEN) syncFromCloud();
 }
-function saveData() { localStorage.setItem('xiaopaifu_data', JSON.stringify(checkinData)); }
+
+function saveData() {
+  localStorage.setItem('xiaopaifu_data', JSON.stringify(checkinData));
+  // 自动同步到云端（防抖 2 秒）
+  if (GIST_TOKEN) {
+    clearTimeout(_syncTimer);
+    _syncTimer = setTimeout(syncToCloud, 2000);
+  }
+}
+
+// 从 Gist 拉取数据
+async function syncFromCloud() {
+  if (!GIST_TOKEN) return;
+  try {
+    // 先获取 gist 列表，找我们的 gist
+    const gistId = localStorage.getItem('xiaopaifu_gist_id');
+    if (!gistId) { await findOrCreateGist(); return; }
+    
+    const resp = await fetch('https://api.github.com/gists/' + gistId, {
+      headers: { 'Authorization': 'token ' + GIST_TOKEN }
+    });
+    if (!resp.ok) { console.log('Gist fetch failed:', resp.status); return; }
+    
+    const gist = await resp.json();
+    const file = gist.files && gist.files[GIST_FILENAME];
+    if (!file || !file.content) return;
+    
+    const cloudData = JSON.parse(file.content);
+    const cloudHash = JSON.stringify(cloudData);
+    
+    // 如果云端数据比本地新，用云端的
+    if (cloudHash !== _lastCloudHash) {
+      _lastCloudHash = cloudHash;
+      // 合并策略：取日期最多的
+      const merged = mergeData(checkinData, cloudData);
+      checkinData = merged;
+      localStorage.setItem('xiaopaifu_data', JSON.stringify(checkinData));
+      renderNav(); renderMain();
+    }
+  } catch(e) { console.log('Sync from cloud error:', e); }
+}
+
+// 上传数据到 Gist
+async function syncToCloud() {
+  if (!GIST_TOKEN) return;
+  try {
+    const gistId = localStorage.getItem('xiaopaifu_gist_id');
+    if (!gistId) { await findOrCreateGist(); return; }
+    
+    const dataStr = JSON.stringify(checkinData);
+    if (dataStr === _lastCloudHash) return; // 没变化，不同步
+    
+    const body = {
+      files: { [GIST_FILENAME]: { content: dataStr } }
+    };
+    
+    const resp = await fetch('https://api.github.com/gists/' + gistId, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': 'token ' + GIST_TOKEN,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+    
+    if (resp.ok) {
+      _lastCloudHash = dataStr;
+      console.log('Synced to cloud OK');
+    } else {
+      console.log('Sync failed:', resp.status);
+    }
+  } catch(e) { console.log('Sync to cloud error:', e); }
+}
+
+// 查找或创建 Gist
+async function findOrCreateGist() {
+  if (!GIST_TOKEN) return;
+  try {
+    // 先查找已有 gist
+    const resp = await fetch('https://api.github.com/gists?per_page=100', {
+      headers: { 'Authorization': 'token ' + GIST_TOKEN }
+    });
+    if (!resp.ok) return;
+    const gists = await resp.json();
+    const existing = gists.find(g => g.files && g.files[GIST_FILENAME]);
+    
+    if (existing) {
+      localStorage.setItem('xiaopaifu_gist_id', existing.id);
+      await syncFromCloud();
+      return;
+    }
+    
+    // 创建新 gist
+    const createResp = await fetch('https://api.github.com/gists', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'token ' + GIST_TOKEN,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        description: '小泡芙打卡数据',
+        public: false,
+        files: { [GIST_FILENAME]: { content: JSON.stringify(checkinData) } }
+      })
+    });
+    
+    if (createResp.ok) {
+      const gist = await createResp.json();
+      localStorage.setItem('xiaopaifu_gist_id', gist.id);
+      _lastCloudHash = JSON.stringify(checkinData);
+      console.log('Gist created:', gist.id);
+    }
+  } catch(e) { console.log('Find/create gist error:', e); }
+}
+
+// 合并两个数据源（保留所有日期的打卡记录）
+function mergeData(local, cloud) {
+  const merged = {};
+  // 先合并云端的
+  for (const date in cloud) merged[date] = cloud[date];
+  // 再合并本地的（本地优先）
+  for (const date in local) {
+    if (!merged[date]) {
+      merged[date] = local[date];
+    } else {
+      // 同一日期，保留打卡项更多的
+      const cloudKeys = Object.keys(merged[date]);
+      const localKeys = Object.keys(local[date]);
+      if (localKeys.length > cloudKeys.length) {
+        merged[date] = local[date];
+      } else {
+        // 合并同一日期的不同模块打卡
+        for (const k of localKeys) {
+          if (!merged[date][k]) merged[date][k] = local[date][k];
+        }
+      }
+    }
+  }
+  return merged;
+}
+
+// 设置 Token（用户手动输入）
+function setSyncToken(token) {
+  if (!token || token.length < 10) return false;
+  GIST_TOKEN = token;
+  localStorage.setItem('xiaopaifu_token', token);
+  findOrCreateGist();
+  return true;
+}
+
+// 手动触发同步
+async function manualSync() {
+  await syncFromCloud();
+  await syncToCloud();
+  renderNav(); renderMain();
+  alert('同步完成！');
+}
+
+// 清除同步设置
+function clearSync() {
+  localStorage.removeItem('xiaopaifu_token');
+  localStorage.removeItem('xiaopaifu_gist_id');
+  GIST_TOKEN = '';
+  alert('已清除同步设置');
+}
 
 // ===== 语音播放（真人MP3） =====
 // 加载音频映射表
@@ -72,6 +247,7 @@ function renderNav() {
     const checked = todayData[mod.id];
     html += `<div class="nav-item ${currentModule === mod.id ? 'active' : ''}" onclick="switchModule('${mod.id}')"><span class="nav-icon">${mod.icon}</span><span class="nav-label">${mod.name}</span>${checked ? '<span class="nav-badge done"></span>' : ''}</div>`;
   });
+  html += '<div class="sidebar-sync-btn" onclick="toggleSyncSettings()" title="云同步设置">☁️</div>';
   sidebar.innerHTML = html;
 }
 
@@ -93,6 +269,7 @@ function renderMain() {
 
 // ===== 首页 =====
 function renderHome() {
+  if (GIST_TOKEN) { setTimeout(() => { const el = document.getElementById('sync-indicator'); if (el) el.style.display = 'block'; }, 100); }
   const todayStr = getTodayStr();
   const todayData = checkinData[todayStr] || {};
   const todayCount = Object.keys(todayData).length;
@@ -109,6 +286,9 @@ function renderHome() {
       <div class="welcome-title">🧁 小泡芙 · 自我提升工作台</div>
       <div class="welcome-sub">每天进步一点点，成为更好的自己</div>
       <div class="welcome-date">${dateStr} · 今日打卡 ${todayCount}/${totalCount}</div>
+    </div>
+    <div id="sync-indicator" style="display:none;text-align:center;margin-bottom:8px;font-size:11px;color:var(--pink-500);">
+      ☁️ 已开启云同步 · 数据自动备份
     </div>
     <div class="stats-row">
       <div class="stat-box"><div class="stat-num">${todayCount}/${totalCount}</div><div class="stat-label">今日打卡</div></div>
@@ -131,6 +311,13 @@ function renderHome() {
     <div class="content-card">
       <div class="card-title"><span class="emoji">📋</span> 今日任务清单</div>
       ${renderTodayTasks(todayData)}
+    </div>
+    ${(() => { const quote = getDailyQuote(); window._todayQuote = quote; return ''; })()}
+    <div class="quote-card">
+      <div class="quote-type">📜 每日好句</div>
+      <div class="quote-text">${getDailyQuote().text}</div>
+      <div class="quote-author">—— ${getDailyQuote().author}</div>
+      ${getDailyQuote().note ? `<div class="quote-note">💡 ${getDailyQuote().note}</div>` : ''}
     </div>
     <div class="tips-card">
       <div class="card-title"><span class="emoji">💪</span> 小泡芙寄语</div>
@@ -173,6 +360,7 @@ function getOverallHeatmap() {
 function renderCheckinCard(mod) {
   const streak = getStreakCount(checkinData, mod.id);
   const total = getTotalCount(checkinData, mod.id);
+  if (GIST_TOKEN) { setTimeout(() => { const el = document.getElementById('sync-indicator'); if (el) el.style.display = 'block'; }, 100); }
   const todayStr = getTodayStr();
   const todayRecord = (checkinData[todayStr] && checkinData[todayStr][mod.id]) || null;
   const isDone = !!todayRecord;
@@ -188,6 +376,9 @@ function renderCheckinCard(mod) {
         <textarea class="input-field" id="note-${mod.id}" placeholder="今天的心得体会、收获、感受..." rows="3">${todayRecord && todayRecord.note ? todayRecord.note : ''}</textarea>
         <button class="save-btn" onclick="saveNote('${mod.id}')" style="margin-top:8px;width:100%;">💾 保存记录</button>
       </div>
+    </div>
+    <div id="sync-indicator" style="display:none;text-align:center;margin-bottom:8px;font-size:11px;color:var(--pink-500);">
+      ☁️ 已开启云同步 · 数据自动备份
     </div>
     <div class="stats-row">
       <div class="stat-box"><div class="stat-num">${streak}</div><div class="stat-label">连续天数</div></div>
@@ -251,6 +442,7 @@ function renderHistory(modId) {
 }
 
 function toggleCheckin(modId) {
+  if (GIST_TOKEN) { setTimeout(() => { const el = document.getElementById('sync-indicator'); if (el) el.style.display = 'block'; }, 100); }
   const todayStr = getTodayStr();
   if (!checkinData[todayStr]) checkinData[todayStr] = {};
   if (checkinData[todayStr][modId]) {
@@ -263,6 +455,7 @@ function toggleCheckin(modId) {
 }
 
 function saveNote(modId) {
+  if (GIST_TOKEN) { setTimeout(() => { const el = document.getElementById('sync-indicator'); if (el) el.style.display = 'block'; }, 100); }
   const todayStr = getTodayStr();
   if (!checkinData[todayStr]) checkinData[todayStr] = {};
   if (!checkinData[todayStr][modId]) checkinData[todayStr][modId] = {};
@@ -608,6 +801,43 @@ function toggleAnswer(idx) {
   const toggle = document.getElementById(`toggle-${idx}`);
   if (answer.style.display === 'none') { answer.style.display = 'block'; toggle.textContent = '收起'; }
   else { answer.style.display = 'none'; toggle.textContent = '查看答案'; }
+}
+
+// ===== 同步设置 =====
+function toggleSyncSettings() {
+  const modal = document.getElementById('sync-modal');
+  modal.style.display = modal.style.display === 'none' ? 'flex' : 'none';
+  // Update status
+  const statusEl = document.getElementById('sync-status');
+  if (GIST_TOKEN) {
+    const gistId = localStorage.getItem('xiaopaifu_gist_id');
+    statusEl.textContent = gistId ? '✅ 已连接（Gist: ' + gistId.substring(0,8) + '...）' : '✅ Token 已设置';
+    statusEl.style.color = '#4CAF50';
+  } else {
+    statusEl.textContent = '未设置';
+    statusEl.style.color = 'var(--text-light)';
+  }
+}
+
+function saveSyncToken() {
+  const input = document.getElementById('sync-token-input');
+  const token = input.value.trim();
+  if (!token) { alert('请粘贴 GitHub Token'); return; }
+  if (setSyncToken(token)) {
+    input.value = '';
+    toggleSyncSettings();
+    alert('✅ 云同步已开启！打卡数据将自动在手机和电脑间同步。');
+  } else {
+    alert('Token 格式不正确');
+  }
+}
+
+function clearSyncToken() {
+  if (confirm('确定清除同步设置吗？本地数据不会丢失。')) {
+    clearSync();
+    document.getElementById('sync-token-input').value = '';
+    toggleSyncSettings();
+  }
 }
 
 // ===== PWA =====

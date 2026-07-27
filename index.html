@@ -620,6 +620,43 @@
     }
     
     /* ===== Tips ===== */
+    .quote-card {
+      background: linear-gradient(135deg, #FFF8F0, #FFF0E6);
+      border: 1px solid #FFE0C0;
+      border-radius: var(--radius-md);
+      padding: 20px 18px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .quote-type {
+      font-size: 12px;
+      font-weight: 600;
+      color: #E8A87C;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .quote-text {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.8;
+      font-family: 'STKaiti', 'KaiTi', '楷体', serif;
+      margin-bottom: 8px;
+    }
+    .quote-author {
+      font-size: 13px;
+      color: var(--text-sub);
+      margin-bottom: 4px;
+    }
+    .quote-note {
+      font-size: 12px;
+      color: #E8A87C;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px dashed #FFE0C0;
+      line-height: 1.6;
+    }
     .tips-card {
       background: linear-gradient(135deg, #FFF5F8, #FFE4EC);
       border-radius: var(--radius);
@@ -1419,6 +1456,64 @@
       color: var(--text-main);
       line-height: 1.6;
     }
+
+    .sidebar-settings {
+      margin-top: auto;
+      padding: 12px;
+      text-align: center;
+    }
+    .sidebar-settings-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--pink-100);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.2s;
+    }
+    .sidebar-settings-btn:active { background: var(--pink-300); transform: scale(0.9); }
+    .sidebar-sync-btn {
+      margin-top: auto;
+      padding: 10px 12px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 18px;
+      opacity: 0.5;
+      transition: opacity 0.2s;
+    }
+    .sidebar-sync-btn:active { opacity: 1; }
+    .sync-modal {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.4); z-index: 9999;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .sync-modal-content {
+      background: #fff; border-radius: 16px; padding: 20px;
+      width: 90%; max-width: 400px; box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    }
+    .sync-modal-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 12px;
+    }
+    .sync-input {
+      width: 100%; padding: 10px 12px; border: 1px solid var(--pink-200);
+      border-radius: 8px; font-size: 13px; outline: none;
+      box-sizing: border-box;
+    }
+    .sync-input:focus { border-color: var(--pink-500); }
+    .sync-save-btn {
+      flex: 1; padding: 10px; border: none; border-radius: 8px;
+      background: linear-gradient(135deg, var(--pink-500), var(--pink-400));
+      color: #fff; font-size: 14px; font-weight: 600; cursor: pointer;
+    }
+    .sync-save-btn:active { transform: scale(0.97); }
+    .sync-clear-btn {
+      padding: 10px 16px; border: 1px solid var(--pink-200); border-radius: 8px;
+      background: #fff; color: var(--text-light); font-size: 13px; cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -1428,6 +1523,30 @@
     
     <!-- 主内容 -->
     <main class="main" id="main"></main>
+  </div>
+  
+  <!-- 同步设置弹窗 -->
+  <div class="sync-modal" id="sync-modal" style="display:none;">
+    <div class="sync-modal-content">
+      <div class="sync-modal-header">
+        <span style="font-weight:700;font-size:16px;">☁️ 云同步设置</span>
+        <span style="cursor:pointer;font-size:22px;line-height:1;" onclick="toggleSyncSettings()">×</span>
+      </div>
+      <div style="font-size:13px;color:var(--text-sub);margin-bottom:12px;line-height:1.6;">
+        开启后手机和电脑打卡数据自动互通。<br>
+        需要创建 GitHub Token（仅 gist 权限）：<br>
+        <a href="https://github.com/settings/tokens/new?scopes=gist&description=xiaopaifu" target="_blank" style="color:var(--pink-500);font-weight:600;">👉 点此一键创建 Token</a><br>
+        <span style="font-size:11px;">创建后复制 token，粘贴到下方输入框</span>
+      </div>
+      <input class="sync-input" id="sync-token-input" type="password" placeholder="粘贴 GitHub Token（ghp_开头）...">
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <button class="sync-save-btn" onclick="saveSyncToken()">保存并开启同步</button>
+        <button class="sync-clear-btn" onclick="clearSyncToken()">清除设置</button>
+      </div>
+      <div style="margin-top:10px;font-size:12px;" id="sync-status-line">
+        状态：<span id="sync-status">未设置</span>
+      </div>
+    </div>
   </div>
   
   <script src="data.js"></script>

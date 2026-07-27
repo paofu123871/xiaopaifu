@@ -495,7 +495,9 @@ function renderModuleContent(mod) {
 
 // ===== 英语 =====
 function renderEnglish(mod) {
-  const t = mod.today;
+  const dayName = getDayOfWeek();
+  const daily = mod.daily || {};
+  const t = daily[dayName] || mod.today;
   const v = t.video;
   let html = '';
 
@@ -601,11 +603,16 @@ function toggleRetell(idx) {
 // ===== 新闻 =====
 function renderNews(mod) {
   let html = '';
+  // 按天轮换：每天显示不同新闻（3条轮换）
+  const dayIdx = new Date().getDay();
+  const total = mod.news.length;
   mod.news.forEach((n, i) => {
+    const rotateIdx = (i + dayIdx) % total;
+    const item = mod.news[rotateIdx];
     html += `<div class="content-card">
-      <div class="news-tag">${n.tag}</div>
-      <div class="news-title">${n.title}</div>
-      <div class="reading-text">${n.content.replace(/\n/g, '<br>')}</div>
+      <div class="news-tag">${item.tag}</div>
+      <div class="news-title">${item.title}</div>
+      <div class="reading-text">${item.content.replace(/\n/g, '<br>')}</div>
     </div>`;
   });
   return html;
@@ -613,22 +620,33 @@ function renderNews(mod) {
 
 // ===== 知识拓展 =====
 function renderKnowledge(mod) {
+  // 每天轮换显示5条
+  const allItems = mod.items;
+  const total = allItems.length;
+  const dayIdx = new Date().getDay();
+  const showCount = 5;
+  const todayItems = [];
+  for (let i = 0; i < showCount; i++) {
+    todayItems.push(allItems[(dayIdx * showCount + i) % total]);
+  }
   let html = `<div class="content-card" style="background:linear-gradient(135deg,#FFB3C6,#FFC9DA);color:#fff;">
-    <div style="font-size:16px;font-weight:800;">📚 知识库</div>
-    <div style="font-size:13px;opacity:0.9;">共${mod.items.length}条知识 · 随时点开学 · 碎片时间看一看</div>
+    <div style="font-size:16px;font-weight:800;">📚 知识库 · 今日5条</div>
+    <div style="font-size:13px;opacity:0.9;">共${total}条知识 · 每天5条轮换 · 周日全部可见</div>
   </div>`;
-  html += `<div class="content-card">
-    ${mod.items.map((k, i) => `
-      <div class="knowledge-item" onclick="toggleKnowledge(${i})">
+  html += `<div class="content-card">`;
+  todayItems.forEach((k, i) => {
+    const globalIdx = allItems.indexOf(k);
+    html += `
+      <div class="knowledge-item" onclick="toggleKnowledge(${globalIdx})">
         <div class="knowledge-header">
           <span class="knowledge-category">${k.category}</span>
           <span class="knowledge-title-text">${k.title}</span>
-          <span class="knowledge-toggle" id="k-toggle-${i}">展开</span>
+          <span class="knowledge-toggle" id="k-toggle-${globalIdx}">展开</span>
         </div>
-        <div class="knowledge-content" id="k-content-${i}" style="display:none;">${(k.content || k.body || '').replace(/\n/g, '<br>')}</div>
-      </div>
-    `).join('')}
-  </div>`;
+        <div class="knowledge-content" id="k-content-${globalIdx}" style="display:none;">${(k.content || k.body || '').replace(/\n/g, '<br>')}</div>
+      </div>`;
+  });
+  html += `</div>`;
   return html;
 }
 
@@ -736,7 +754,9 @@ function renderFitness(mod) {
 
 // ===== 表达 =====
 function renderSpeech(mod) {
-  const t = mod.today;
+  const dayName = getDayOfWeek();
+  const daily = mod.daily || {};
+  const t = daily[dayName] || mod.today;
   let html = `<div class="content-card" style="background:linear-gradient(135deg,#FF6B9D,#FF85B0);color:#fff;">
     <div style="font-size:18px;font-weight:800;margin-bottom:4px;">${t.theme}</div>
     <div style="font-size:13px;opacity:0.9;">${t.themeDesc}</div>

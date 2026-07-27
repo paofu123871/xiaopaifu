@@ -54,6 +54,379 @@ const MODULES_DATA = {
     subtitle: '真人跟读训练 · 每日25分钟',
     duration: '20-30分钟',
     goal: '用影子跟读法科学训练听说能力，素材来自B站真人发音视频，目标是日常英语无障碍交流 · 出国旅游 · 职业转型',
+    daily: {
+      '周一': {
+        theme: '☕ 咖啡店点单',
+        themeDesc: '跟着真人视频逐句跟读，今天练完就能用英语自信点咖啡',
+        scene: '日常场景',
+        video: {
+          title: 'B站真人跟读 · 咖啡店场景',
+          desc: '点击播放，跟着真人逐句跟读。先盲听 → 看字幕跟读 → 影子跟读。视频支持调速，建议先用0.75倍速。',
+          bvid: 'BV1KtX7YAEqg',
+          duration: '15分钟',
+          tips: ['第1遍：盲听，不看字幕，抓大意', '第2遍：看英文字幕跟读，注意语音语调', '第3遍：影子跟读，延迟0.5秒，不看字幕', '视频右下角可调播放速度，建议从0.75x开始']
+        },
+        patterns: {
+          title: '🎯 今日核心句型（举一反三 ~5分钟）',
+          desc: '跟读完后，记住这3个最实用的表达。大声读3遍，用替换例句自己说一遍。',
+          items: [{
+              pattern: 'I\'d like (a) ...',
+              meaning: '我想要...（比 I want 更礼貌，点单必备）',
+              examples: ['I\'d like a medium latte, please.', 'I\'d like to pay by card.']
+            }, {
+              pattern: 'Can I get it with ...?',
+              meaning: '可以加...吗？（提出个性化需求）',
+              examples: ['Can I get it with oat milk?', 'Can I get it with whipped cream?']
+            }, {
+              pattern: 'For here or to go?',
+              meaning: '在这喝还是外带？（外国店员必问句）',
+              examples: ['For here or to go?', 'To go, please.']
+            }]
+        },
+        retell: {
+          title: '🗣️ 自我复述（输出检验 ~5分钟）',
+          desc: '不看视频，看提示词用自己的话复述今天的对话。先自己说，再点展开看参考回答。',
+          prompts: [{
+              hint: '你走进咖啡店，想点一杯中杯热拿铁，用燕麦奶，不加糖，外带。说说你会怎么跟店员交流。',
+              answer: 'Hi, I\'d like a latte, please. A medium, hot, with oat milk, no sugar. To go, please.'
+            }, {
+              hint: '店员问你什么杯型、在这喝还是外带、要不要冰的，你怎么回答？',
+              answer: 'A medium, please. To go. Hot, please.'
+            }]
+        },
+        quiz: {
+          title: '✅ 今日自测',
+          questions: [{
+              q: '你要一杯中杯燕麦奶拿铁，外带，怎么说？',
+              a: 'A medium oat milk latte, to go, please.'
+            }, {
+              q: '店员问你要冰的还是热的，她会怎么说？',
+              a: 'Would you like it iced or hot?'
+            }, {
+              q: '你想问店员推荐什么，怎么说？',
+              a: 'What do you recommend?'
+            }]
+        }
+      },
+      '周二': {
+        theme: '🛒 超市购物',
+        themeDesc: '跟着真人视频学超市购物英语，问价格、找商品、结账全流程',
+        scene: '日常场景',
+        video: {
+          title: 'B站真人跟读 · 超市购物场景',
+          desc: '跟着真人逐句跟读，学习超市购物常用表达。先盲听 → 看字幕跟读 → 影子跟读。',
+          bvid: 'BV1KtX7YAEqg',
+          duration: '15分钟',
+          tips: ['第1遍盲听抓大意', '第2遍看字幕跟读', '第3遍影子跟读不看字幕', '建议从0.75x开始']
+        },
+        patterns: {
+          title: '🎯 今日核心句型（举一反三 ~5分钟）',
+          desc: '记住这3个超市购物最实用表达。大声读3遍，用替换例句自己说一遍。',
+          items: [{
+              pattern: 'Where can I find ...?',
+              meaning: '我在哪能找到...？（找商品必备）',
+              examples: ['Where can I find the milk?', 'Where can I find the bread aisle?']
+            }, {
+              pattern: 'How much is ...?',
+              meaning: '...多少钱？（问价格）',
+              examples: ['How much is this?', 'How much are these apples?']
+            }, {
+              pattern: 'Do you have ...?',
+              meaning: '你们有...吗？（问有没有某个商品）',
+              examples: ['Do you have almond milk?', 'Do you have this in a smaller size?']
+            }]
+        },
+        retell: {
+          title: '🗣️ 自我复述（输出检验 ~5分钟）',
+          desc: '不看视频，看提示词用自己的话复述。',
+          prompts: [{
+              hint: '你在超市找不到牛奶，怎么问店员？',
+              answer: 'Excuse me, where can I find the milk?'
+            }, {
+              hint: '你想知道苹果多少钱一斤，怎么问？',
+              answer: 'How much are these apples?'
+            }]
+        },
+        quiz: {
+          title: '✅ 今日自测',
+          questions: [{
+              q: '问店员面包在哪，怎么说？',
+              a: 'Where can I find the bread?'
+            }, {
+              q: '问这个多少钱，怎么说？',
+              a: 'How much is this?'
+            }, {
+              q: '问有没有小份的，怎么说？',
+              a: 'Do you have this in a smaller size?'
+            }]
+        }
+      },
+      '周三': {
+        theme: '✈️ 机场值机',
+        themeDesc: '跟着真人视频学机场英语，值机、安检、登机全流程',
+        scene: '出行场景',
+        video: {
+          title: 'B站真人跟读 · 机场值机场景',
+          desc: '跟着真人逐句跟读，掌握机场常用表达。',
+          bvid: 'BV1KtX7YAEqg',
+          duration: '15分钟',
+          tips: ['第1遍盲听抓大意', '第2遍看字幕跟读', '第3遍影子跟读不看字幕', '建议从0.75x开始']
+        },
+        patterns: {
+          title: '🎯 今日核心句型（举一反三 ~5分钟）',
+          desc: '记住这3个机场值机最实用表达。',
+          items: [{
+              pattern: 'I\'d like to check in for flight ...',
+              meaning: '我想办理...航班值机',
+              examples: ['I\'d like to check in for flight CA123.', 'I\'d like to check in for my flight to Tokyo.']
+            }, {
+              pattern: 'Can I have a window/aisle seat?',
+              meaning: '我可以要靠窗/靠走道的座位吗？',
+              examples: ['Can I have a window seat?', 'Can I have an aisle seat?']
+            }, {
+              pattern: 'How many bags can I check?',
+              meaning: '我可以托运几件行李？',
+              examples: ['How many bags can I check?', 'Can I check two bags?']
+            }]
+        },
+        retell: {
+          title: '🗣️ 自我复述（输出检验 ~5分钟）',
+          desc: '不看视频，看提示词用自己的话复述。',
+          prompts: [{
+              hint: '你到机场想办理CA123航班值机，想要靠窗座位，怎么说？',
+              answer: 'Hi, I\'d like to check in for flight CA123. Can I have a window seat, please?'
+            }, {
+              hint: '你想问能托运几件行李，怎么说？',
+              answer: 'How many bags can I check?'
+            }]
+        },
+        quiz: {
+          title: '✅ 今日自测',
+          questions: [{
+              q: '要靠走道的座位，怎么说？',
+              a: 'Can I have an aisle seat?'
+            }, {
+              q: '问能托运几件行李，怎么说？',
+              a: 'How many bags can I check?'
+            }, {
+              q: '说你要办理去东京的航班值机，怎么说？',
+              a: 'I\'d like to check in for my flight to Tokyo.'
+            }]
+        }
+      },
+      '周四': {
+        theme: '🏥 看医生',
+        themeDesc: '跟着真人视频学就医英语，描述症状、问诊、取药',
+        scene: '日常场景',
+        video: {
+          title: 'B站真人跟读 · 看医生场景',
+          desc: '跟着真人逐句跟读，掌握看病常用表达。',
+          bvid: 'BV1KtX7YAEqg',
+          duration: '15分钟',
+          tips: ['第1遍盲听抓大意', '第2遍看字幕跟读', '第3遍影子跟读不看字幕', '建议从0.75x开始']
+        },
+        patterns: {
+          title: '🎯 今日核心句型（举一反三 ~5分钟）',
+          desc: '记住这3个看医生最实用表达。',
+          items: [{
+              pattern: 'I\'ve been feeling ...',
+              meaning: '我一直感觉...（描述症状）',
+              examples: ['I\'ve been feeling dizzy.', 'I\'ve been feeling a pain in my chest.']
+            }, {
+              pattern: 'How long have you had ...?',
+              meaning: '你...多久了？（医生会问的）',
+              examples: ['How long have you had this pain?', 'How long have you had a fever?']
+            }, {
+              pattern: 'I need a prescription for ...',
+              meaning: '我需要...的处方',
+              examples: ['I need a prescription for painkillers.', 'I need a prescription for antibiotics.']
+            }]
+        },
+        retell: {
+          title: '🗣️ 自我复述（输出检验 ~5分钟）',
+          desc: '不看视频，看提示词用自己的话复述。',
+          prompts: [{
+              hint: '你去看医生，说你一直头疼、头晕，怎么说？',
+              answer: 'I\'ve been feeling dizzy and I have a headache.'
+            }, {
+              hint: '你需要止痛药的处方，怎么说？',
+              answer: 'I need a prescription for painkillers.'
+            }]
+        },
+        quiz: {
+          title: '✅ 今日自测',
+          questions: [{
+              q: '说你一直胸口疼，怎么说？',
+              a: 'I\'ve been feeling a pain in my chest.'
+            }, {
+              q: '医生问你发烧多久了，怎么问？',
+              a: 'How long have you had a fever?'
+            }, {
+              q: '需要抗生素处方，怎么说？',
+              a: 'I need a prescription for antibiotics.'
+            }]
+        }
+      },
+      '周五': {
+        theme: '🍽️ 餐厅点餐',
+        themeDesc: '跟着真人视频学餐厅英语，点菜、问推荐、买单',
+        scene: '日常场景',
+        video: {
+          title: 'B站真人跟读 · 餐厅点餐场景',
+          desc: '跟着真人逐句跟读，掌握餐厅点餐全流程。',
+          bvid: 'BV1KtX7YAEqg',
+          duration: '15分钟',
+          tips: ['第1遍盲听抓大意', '第2遍看字幕跟读', '第3遍影子跟读不看字幕', '建议从0.75x开始']
+        },
+        patterns: {
+          title: '🎯 今日核心句型（举一反三 ~5分钟）',
+          desc: '记住这3个餐厅点餐最实用表达。',
+          items: [{
+              pattern: 'Could we have a table for ...?',
+              meaning: '我们能要一张...人的桌子吗？',
+              examples: ['Could we have a table for two?', 'Could we have a table for four?']
+            }, {
+              pattern: 'What do you recommend?',
+              meaning: '你推荐什么？（让服务员推荐菜品）',
+              examples: ['What do you recommend?', 'What\'s your most popular dish?']
+            }, {
+              pattern: 'Could we have the bill, please?',
+              meaning: '请结账。（买单必备）',
+              examples: ['Could we have the bill, please?', 'Can I pay by card?']
+            }]
+        },
+        retell: {
+          title: '🗣️ 自我复述（输出检验 ~5分钟）',
+          desc: '不看视频，看提示词用自己的话复述。',
+          prompts: [{
+              hint: '你和朋友去餐厅，要两人的桌子，怎么跟服务员说？',
+              answer: 'Hi, could we have a table for two, please?'
+            }, {
+              hint: '吃完想结账，用信用卡付，怎么说？',
+              answer: 'Could we have the bill, please? Can I pay by card?'
+            }]
+        },
+        quiz: {
+          title: '✅ 今日自测',
+          questions: [{
+              q: '要4人桌，怎么说？',
+              a: 'Could we have a table for four?'
+            }, {
+              q: '问服务员最推荐什么菜，怎么说？',
+              a: 'What\'s your most popular dish?'
+            }, {
+              q: '结账，怎么说？',
+              a: 'Could we have the bill, please?'
+            }]
+        }
+      },
+      '周六': {
+        theme: '🏠 酒店入住',
+        themeDesc: '跟着真人视频学酒店英语，预订、入住、退房',
+        scene: '生活场景',
+        video: {
+          title: 'B站真人跟读 · 酒店入住场景',
+          desc: '跟着真人逐句跟读，掌握酒店入住常用表达。',
+          bvid: 'BV1KtX7YAEqg',
+          duration: '15分钟',
+          tips: ['第1遍盲听抓大意', '第2遍看字幕跟读', '第3遍影子跟读不看字幕', '建议从0.75x开始']
+        },
+        patterns: {
+          title: '🎯 今日核心句型（举一反三 ~5分钟）',
+          desc: '记住这3个酒店入住最实用表达。',
+          items: [{
+              pattern: 'I have a reservation under ...',
+              meaning: '我用...名字预订了房间',
+              examples: ['I have a reservation under Zhang Wei.', 'I have a reservation for tonight.']
+            }, {
+              pattern: 'What time is check-out?',
+              meaning: '几点退房？',
+              examples: ['What time is check-out?', 'Can I get a late check-out?']
+            }, {
+              pattern: 'Is breakfast included?',
+              meaning: '包含早餐吗？',
+              examples: ['Is breakfast included?', 'Is Wi-Fi free?']
+            }]
+        },
+        retell: {
+          title: '🗣️ 自我复述（输出检验 ~5分钟）',
+          desc: '不看视频，看提示词用自己的话复述。',
+          prompts: [{
+              hint: '你到酒店说用Zhang Wei名字预订了房间，怎么说？',
+              answer: 'Hi, I have a reservation under Zhang Wei.'
+            }, {
+              hint: '你想问几点退房、有没有免费早餐，怎么说？',
+              answer: 'What time is check-out? Is breakfast included?'
+            }]
+        },
+        quiz: {
+          title: '✅ 今日自测',
+          questions: [{
+              q: '说你预订了今晚的房间，怎么说？',
+              a: 'I have a reservation for tonight.'
+            }, {
+              q: '问能不能晚点退房，怎么说？',
+              a: 'Can I get a late check-out?'
+            }, {
+              q: '问Wi-Fi免费吗，怎么说？',
+              a: 'Is Wi-Fi free?'
+            }]
+        }
+      },
+      '周日': {
+        theme: '💬 日常闲聊',
+        themeDesc: '跟着真人视频学日常闲聊英语，打招呼、聊天气、聊近况',
+        scene: '社交场景',
+        video: {
+          title: 'B站真人跟读 · 日常闲聊场景',
+          desc: '跟着真人逐句跟读，掌握日常聊天常用表达。',
+          bvid: 'BV1KtX7YAEqg',
+          duration: '15分钟',
+          tips: ['第1遍盲听抓大意', '第2遍看字幕跟读', '第3遍影子跟读不看字幕', '建议从0.75x开始']
+        },
+        patterns: {
+          title: '🎯 今日核心句型（举一反三 ~5分钟）',
+          desc: '记住这3个日常闲聊最实用表达。',
+          items: [{
+              pattern: 'How\'s it going?',
+              meaning: '最近怎么样？（比How are you更地道）',
+              examples: ['How\'s it going?', 'How have you been?']
+            }, {
+              pattern: 'What have you been up to?',
+              meaning: '你最近在忙什么？',
+              examples: ['What have you been up to?', 'What\'s new?']
+            }, {
+              pattern: 'It\'s been a while!',
+              meaning: '好久不见！',
+              examples: ['It\'s been a while!', 'Long time no see!']
+            }]
+        },
+        retell: {
+          title: '🗣️ 自我复述（输出检验 ~5分钟）',
+          desc: '不看视频，看提示词用自己的话复述。',
+          prompts: [{
+              hint: '你遇到一个老朋友，问他最近怎么样、在忙什么，怎么说？',
+              answer: 'Hey! How\'s it going? What have you been up to?'
+            }, {
+              hint: '你想说好久不见了，怎么说？',
+              answer: 'It\'s been a while! Long time no see!'
+            }]
+        },
+        quiz: {
+          title: '✅ 今日自测',
+          questions: [{
+              q: '问朋友最近怎么样，怎么说？',
+              a: 'How\'s it going?'
+            }, {
+              q: '问朋友最近在忙什么，怎么说？',
+              a: 'What have you been up to?'
+            }, {
+              q: '说好久不见，怎么说？',
+              a: 'It\'s been a while!'
+            }]
+        }
+      },
+    },
     today: {
       theme: '☕ 咖啡店点单',
       themeDesc: '跟着真人视频逐句跟读，今天练完你就能用英语自信点咖啡',
@@ -410,6 +783,204 @@ const MODULES_DATA = {
     subtitle: '今日作业 · 照着练',
     duration: '15分钟',
     goal: '不怯场 · 逻辑清晰 · 即兴表达流畅',
+    daily: {
+      '周一': {
+        theme: 'PREP框架 + 朗读训练 + 即兴表达',
+        themeDesc: '今天四个任务，全部内容都给你准备好了，照着做就行',
+        task1: {
+          title: '任务一：朗读训练（大声朗读3遍）',
+          desc: '先练嘴皮子，把这段话大声朗读3遍，注意吐字清晰、语速适中',
+          text: '很多人以为，好的表达能力是天生的。其实不是。表达能力是一种可以训练的技能，就像学游泳一样。你第一次下水可能会呛水，但只要坚持练习，你一定能学会。\n\n好表达的秘诀不在于用词多么华丽，而在于清晰和真诚。你能把一件事说明白，让对方听懂，就是好表达。不要追求完美，先追求清晰。说清楚，比说漂亮更重要。'
+        },
+        task2: {
+          title: '任务二：镜子练习（对着镜子说2分钟）',
+          desc: '看着镜子里的自己，用PREP框架回答下面这个问题',
+          framework: 'PREP框架：\nP = Point 先说观点（1句话）\nR = Reason 说理由（1-2句）\nE = Example 举例子（具体的事）\nP = Point 重申观点（1句话收尾）',
+          topic: '话题：你认为早起重要吗？',
+          example: '参考示范：\n\n(P观点) 我认为早起很重要。\n(R理由) 因为早起能给你一段不被打扰的时间，用来做最重要的事。\n(E例子) 比如我自己，每天早起半小时学英语，坚持了三个月，明显感觉进步了。\n(P重申) 所以哪怕只早起半小时，也能改变你的生活节奏。'
+        },
+        task3: {
+          title: '任务三：即兴表达（准备30秒，说1-2分钟）',
+          desc: '模拟突然被问到这个话题，准备30秒后开始说，用PREP框架，录音回听',
+          topics: ['推荐一部你最近看的电影/剧，说说为什么推荐', '如果可以回到一年前，你会给自己什么建议？', '你觉得手机让人更亲近了还是更疏远了？']
+        },
+        task4: {
+          title: '任务四：高情商场景练习',
+          desc: '读场景，想想你会怎么回应，然后看参考答案',
+          scenario: '场景：领导当众说\'你这个方案不太行啊\'',
+          bad: '❌ 错误回应：\'啊...那...我再改改\'\n问题：太怂，显得没思考，也没问清哪里不行',
+          good: '✅ 高情商回应：\'您说得对，确实还有优化空间。我主要在XX方面考虑得不够，您觉得哪个方向最需要调整？我下班前改好给您。\'\n\n要点：\n① 先认可对方（表示接受反馈）\n② 说自己的反思（展示你有在想）\n③ 问方向（让领导给指引）\n④ 给时间承诺（让领导放心）'
+        }
+      },
+      '周二': {
+        theme: 'STAR框架 + 讲故事训练',
+        themeDesc: '今天练习用STAR框架讲故事，让你的表达更有画面感',
+        task1: {
+          title: '任务一：朗读训练（大声朗读3遍）',
+          desc: '先练嘴皮子，注意语速和节奏',
+          text: '讲故事的能力，比你想象的重要得多。无论是面试、汇报还是日常聊天，会讲故事的人总是更有说服力。\n\n好故事的核心是冲突和转变。没有冲突就没有故事，没有转变就没有意义。你不需要讲得很华丽，只需要讲清楚：发生了什么问题？你做了什么？结果怎样？你学到了什么？\n\n这就是STAR框架的精髓：用结构化的方式讲出让人记得住的故事。'
+        },
+        task2: {
+          title: '任务二：STAR框架练习（写下来再说）',
+          desc: '用STAR框架讲一个你自己的经历',
+          framework: 'STAR框架：\nS = Situation 情境（背景是什么）\nT = Task 任务（你需要做什么）\nA = Action 行动（你具体做了什么）\nR = Result 结果（结果如何+你学到了什么）',
+          topic: '话题：讲一个你解决过的难题',
+          example: '参考示范：\n\n(S情境) 去年我们团队要在两周内完成一个项目，但人手不够。\n(T任务) 我负责协调资源，确保按时交付。\n(A行动) 我先列出所有任务按优先级排序，然后找到其他部门借调人手，每天开15分钟站会跟进。\n(R结果) 最终提前1天完成。我学到了：遇到困难不要一个人扛，主动求助也是一种能力。'
+        },
+        task3: {
+          title: '任务三：即兴讲故事（准备1分钟，说2分钟）',
+          desc: '用STAR框架讲以下话题，录音回听',
+          topics: ['讲一次你失败的经历，以及你从中学到了什么', '讲一次你说服别人的经历', '讲一次你在压力下做出决定的经历']
+        },
+        task4: {
+          title: '任务四：倾听与反馈练习',
+          desc: '好的表达者也善于倾听。练习复述+确认技巧',
+          scenario: '场景：同事跟你说了一个复杂的方案，你需要确认你听懂了',
+          bad: '❌ 错误回应：\'嗯嗯，知道了\'\n问题：没有真正理解，后续可能出问题',
+          good: '✅ 好的回应：\'我确认一下我的理解：你打算分三步走，第一步XX，第二步XX，第三步XX，对吗？有没有遗漏的？\'\n\n要点：\n① 用自己的话复述\n② 列要点确认\n③ 问有没有遗漏'
+        }
+      },
+      '周三': {
+        theme: '金字塔原理 + 逻辑表达',
+        themeDesc: '今天练习金字塔原理，让你的表达更有逻辑、更有条理',
+        task1: {
+          title: '任务一：朗读训练（大声朗读3遍）',
+          desc: '练嘴皮子，注意吐字和语速',
+          text: '金字塔原理的核心是：先说结论，再说理由，最后给细节。\n\n大多数人说话的问题在于：铺垫太长。对方听了半天也不知道你想说什么。金字塔原理要求你反过来——先给结论，让对方立刻知道你的核心观点，然后再展开解释。\n\n这就像报纸的标题：你先看到大标题，知道发生了什么，再看正文了解细节。表达也是一样：结论先行，细节后补。'
+        },
+        task2: {
+          title: '任务二：金字塔框架练习',
+          desc: '用金字塔原理组织下面这段信息的表达',
+          framework: '金字塔原理：\n顶层 = 核心结论（1句话）\n中层 = 3个支撑理由\n底层 = 每个理由的具体证据/数据',
+          topic: '话题：你要向老板汇报建议增加人手，怎么用金字塔原理说？',
+          example: '参考示范：\n\n(结论) 建议下季度增加2名人手。\n(理由1) 当前项目超负荷——团队每人每周加班15小时以上\n(理由2) 有3个新项目即将启动——以目前人手无法承接\n(理由3) 招人比外包更划算——长期成本低30%'
+        },
+        task3: {
+          title: '任务三：即兴逻辑表达（准备30秒，说1分钟）',
+          desc: '用金字塔原理（结论先行）回答以下话题',
+          topics: ['你认为远程办公好不好？', '你觉得该不该读研究生？', '手机该不该带入课堂？']
+        },
+        task4: {
+          title: '任务四：电梯演讲练习',
+          desc: '模拟在电梯里遇到领导，30秒内说清你的想法',
+          scenario: '场景：你在电梯里遇到CEO，他想了解你最近在做的项目',
+          bad: '❌ 错误回应：\'嗯...我们最近在做一个...就是...那个项目...\'\n问题：没有重点，浪费时间',
+          good: '✅ 好的回应：\'张总，我们团队在做XX项目，目标是解决XX问题。目前已完成70%，预计月底上线。上线后预计能提升XX效率20%。\'\n\n要点：\n① 一句话说清项目是什么\n② 当前进度\n③ 预期成果'
+        }
+      },
+      '周四': {
+        theme: '同理心表达 + 非暴力沟通',
+        themeDesc: '今天练习用非暴力沟通方式表达，减少冲突、增进理解',
+        task1: {
+          title: '任务一：朗读训练（大声朗读3遍）',
+          desc: '注意语速和情感',
+          text: '非暴力沟通的核心是：说事实，不说评判；说感受，不说指责；说需求，不说命令。\n\n比如，与其说你总是迟到（评判+指责），不如说这周你迟到了3次，我感到有些担心，因为我需要团队的可靠性。你能不能想想办法改善？\n\n这种表达方式不会引发对方的防御心理，反而更容易促成改变。好的表达不是赢过对方，而是让对方愿意听你说话。'
+        },
+        task2: {
+          title: '任务二：非暴力沟通练习',
+          desc: '把以下暴力表达改写成非暴力表达',
+          framework: '非暴力沟通四步：\n1. 观察（说事实，不说评判）\n2. 感受（说自己的感受）\n3. 需要（说自己需要什么）\n4. 请求（具体地请求，不是命令）',
+          topic: '话题：你的室友经常不洗碗，怎么用非暴力沟通跟TA说？',
+          example: '参考示范：\n\n(观察) 这周有3天碗没洗，放在水槽里。\n(感受) 我感到有些不舒服。\n(需要) 因为我需要厨房保持整洁。\n(请求) 你能不能当天用完碗就洗了？或者我们轮流洗碗？'
+        },
+        task3: {
+          title: '任务三：即兴同理心表达（准备30秒，说1分钟）',
+          desc: '用非暴力沟通四步法回答以下话题',
+          topics: ['同事总是把你的东西拿走不还，怎么说？', '伴侣经常看手机不理你，怎么说？', '领导给你安排了太多工作，怎么说？']
+        },
+        task4: {
+          title: '任务四：拒绝的艺术',
+          desc: '练习如何优雅地拒绝别人',
+          scenario: '场景：同事让你帮忙做他的工作，但你自己的活都干不完',
+          bad: '❌ 错误回应：\'我不想做\'或默默接下\n问题：前者伤关系，后者伤自己',
+          good: '✅ 优雅拒绝：\'我理解你很忙，我自己这周也排满了。要不我帮你看看有没有更快的做法？或者你跟领导商量调整一下优先级？\'\n\n要点：\n① 先共情\n② 说自己的情况\n③ 给替代方案'
+        }
+      },
+      '周五': {
+        theme: '幽默表达 + 气氛掌控',
+        themeDesc: '今天练习在表达中加入幽默感，让你的话更有魅力',
+        task1: {
+          title: '任务一：朗读训练（大声朗读3遍）',
+          desc: '这段话本身就很幽默，读的时候注意语气',
+          text: '幽默不是天生的，它是一种可以练习的技巧。好幽默的核心是意外——你在对方期待的方向上来一个转弯。\n\n自嘲是最安全的幽默。拿自己开玩笑，既不会冒犯别人，又能拉近距离。比如：我的英语水平大概是——能看懂菜单点菜，但听不懂服务员问了什么。\n\n记住，幽默的目的不是让人笑，而是让人放松。如果你说的话让对方紧张了，那不叫幽默，叫冒犯。'
+        },
+        task2: {
+          title: '任务二：自嘲幽默练习',
+          desc: '用自嘲的方式说说以下话题，让人会心一笑',
+          framework: '自嘲公式：\n承认一个小缺点 → 用意外的方式收尾\n关键：缺点要无伤大雅，不要太认真',
+          topic: '话题：用自嘲的方式介绍自己的某个小缺点',
+          example: '参考示范：\n\n\'我这个人有个优点，就是记性特别好——前提是不超过5分钟。\'\n\n\'我的厨艺嘛...目前能保证不把厨房烧了，这就是我的最高水平。\''
+        },
+        task3: {
+          title: '任务三：即兴幽默（准备1分钟，说1分钟）',
+          desc: '尝试在以下话题中加入一点幽默元素',
+          topics: ['介绍你的家乡', '描述你最尴尬的一次经历', '说说你对加班的看法']
+        },
+        task4: {
+          title: '任务四：化解尴尬的幽默',
+          desc: '练习在尴尬场合用幽默化解',
+          scenario: '场景：开会时你说错了一句话，全场安静了',
+          bad: '❌ 错误回应：紧张地道歉或装没事\n问题：气氛更尴尬',
+          good: '✅ 幽默化解：\'看来这句话信息量有点大，需要大家消化一下。\'\n或者：\'我刚才说的，大家就当我是在测试你们的反应速度。\'\n\n要点：\n① 不要慌\n② 用轻松的话承认失误\n③ 自然过渡'
+        }
+      },
+      '周六': {
+        theme: '说服力表达 + 数据支撑',
+        themeDesc: '今天练习用数据和逻辑来说服别人',
+        task1: {
+          title: '任务一：朗读训练（大声朗读3遍）',
+          desc: '注意逻辑词的运用',
+          text: '说服力来自三个方面：逻辑、数据、情感。光有逻辑不够干巴巴，光有数据不够动人，光有情感不够有说服力。三者结合，才是最强的说服。\n\n但很多人忽略了一个关键：说服不是赢，而是让对方愿意改变。如果你赢了辩论却输了关系，那不算成功。真正会说服的人，让对方觉得这个主意是我自己想通的。\n\n所以，说服的终极技巧是：提问。用问题引导对方自己得出结论，比你直接给结论有效10倍。'
+        },
+        task2: {
+          title: '任务二：说服框架练习',
+          desc: '用问题-原因-方案-收益框架练习说服',
+          framework: '说服四步：\n1. 问题：目前存在什么问题？\n2. 原因：为什么会出现这个问题？\n3. 方案：我的解决方案是什么？\n4. 收益：这样做有什么好处？',
+          topic: '话题：说服老板给你加薪',
+          example: '参考示范：\n\n(问题) 目前我负责的项目比入职时多了3个。\n(原因) 因为团队人员流动，工作逐渐集中到经验丰富的人身上。\n(方案) 我希望能调整薪资到XX水平，与目前职责匹配。\n(收益) 这样我可以更专注于这些项目，确保高质量交付。'
+        },
+        task3: {
+          title: '任务三：即兴说服（准备1分钟，说2分钟）',
+          desc: '用说服四步法回答以下话题',
+          topics: ['说服朋友跟你一起去旅行', '说服家人支持你换工作', '说服同事采用你的方案']
+        },
+        task4: {
+          title: '任务四：应对反对意见',
+          desc: '练习在被质疑时如何从容回应',
+          scenario: '场景：你提案后，有人说这个方案太冒险了',
+          bad: '❌ 错误回应：\'不冒险的！\'或\'你说得对...\'\n问题：前者对抗，后者放弃',
+          good: '✅ 好的回应：\'您说的对，确实有风险。我来分享一下我是怎么评估这些风险的...您觉得这些应对方式可行吗？\'\n\n要点：\n① 先认可对方的担忧\n② 用事实回应\n③ 再问对方意见'
+        }
+      },
+      '周日': {
+        theme: '复盘与综合实战',
+        themeDesc: '今天把本周学到的所有技巧综合运用，做一次完整的表达实战',
+        task1: {
+          title: '任务一：朗读训练（大声朗读3遍）',
+          desc: '本周最后一篇朗读，注意把每天练的技巧都用上',
+          text: '表达能力的提升，不是靠某一天的顿悟，而是靠每天的积累。这周你练了PREP框架、STAR故事、金字塔原理、非暴力沟通、幽默和说服力。\n\n这些技巧不是孤立的，它们可以组合使用。比如：用金字塔原理开场说结论，用STAR讲故事做支撑，用非暴力沟通的方式回应质疑，最后用幽默收尾。\n\n真正的表达高手，不是记住了多少框架，而是把框架内化成了本能。到了那个阶段，你不需要刻意想我要用什么框架，而是自然而然地说出有条理、有温度、有说服力的话。'
+        },
+        task2: {
+          title: '任务二：综合实战（准备2分钟，说3分钟）',
+          desc: '综合运用本周所有技巧，完成一次完整表达',
+          framework: '综合运用清单：\n✅ 金字塔原理：先说结论\n✅ STAR框架：用一个故事支撑\n✅ 非暴力沟通：用事实而非评判\n✅ 说服力：用数据增强说服力\n✅ 幽默：在适当处加入一点轻松',
+          topic: '话题：向面试官介绍你自己，以及你为什么适合这个岗位',
+          example: '提示：\n先准备2分钟，然后录音说3分钟。说完后回听，给自己打分：\n① 逻辑清晰吗？（金字塔原理）\n② 有具体故事吗？（STAR框架）\n③ 用了事实还是评判？（非暴力沟通）\n④ 有说服力吗？（数据支撑）\n⑤ 有没有让人会心一笑？（幽默）'
+        },
+        task3: {
+          title: '任务三：本周复盘',
+          desc: '花5分钟回顾本周学到的内容，写下感受',
+          topics: ['本周哪个技巧对你帮助最大？', '你在哪个场景用到了这些技巧？效果如何？', '下周你想重点提升哪个方面？']
+        },
+        task4: {
+          title: '任务四：给未来的自己写一段话',
+          desc: '用本周学到的技巧，给3个月后的自己写一段话',
+          scenario: '场景：想象3个月后你已经掌握了这些表达技巧，给现在的自己写一段鼓励的话',
+          bad: '',
+          good: '提示：\n用金字塔原理（先说核心寄语）\n用STAR框架（讲一个你期待的变化）\n用非暴力沟通（对自己也要温和）\n写完后大声读出来，录音保存。'
+        }
+      },
+    },
     today: {
       theme: 'PREP框架 + 即兴表达 + 高情商回应',
       themeDesc: '今天四个任务，全部内容都给你准备好了，照着做就行',

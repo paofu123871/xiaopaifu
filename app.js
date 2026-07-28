@@ -498,7 +498,10 @@ function renderEnglish(mod) {
   const dayName = getDayOfWeek();
   const daily = mod.daily || {};
   const t = daily[dayName] || mod.today;
-  const v = t.video;
+  // 根据日期选择不同视频（每天不同）
+  const dayOfMonth = new Date().getDate();
+  const videos = t.videos || [t.video];  // 兼容旧数据
+  const v = videos[(dayOfMonth - 1) % videos.length] || videos[0];
   let html = '';
 
   // Theme banner
@@ -603,31 +606,33 @@ function toggleRetell(idx) {
 // ===== 新闻 =====
 function renderNews(mod) {
   let html = '';
-  // 按天轮换：每天显示不同新闻（3条轮换）
-  const dayIdx = new Date().getDay();
-  const total = mod.news.length;
-  mod.news.forEach((n, i) => {
-    const rotateIdx = (i + dayIdx) % total;
-    const item = mod.news[rotateIdx];
+  // 按月内日期索引：每天显示3条不同新闻，30天不重复
+  const dayOfMonth = new Date().getDate();  // 1-31
+  const perDay = 3;  // 每天显示3条
+  const total = mod.news.length;  // 90条
+  const startIdx = ((dayOfMonth - 1) * perDay) % total;
+  for (let i = 0; i < perDay; i++) {
+    const item = mod.news[(startIdx + i) % total];
     html += `<div class="content-card">
       <div class="news-tag">${item.tag}</div>
       <div class="news-title">${item.title}</div>
       <div class="reading-text">${item.content.replace(/\n/g, '<br>')}</div>
     </div>`;
-  });
+  }
   return html;
 }
 
 // ===== 知识拓展 =====
 function renderKnowledge(mod) {
-  // 每天轮换显示5条
+  // 按月内日期索引：每天显示5条不同知识，30天不重复
   const allItems = mod.items;
-  const total = allItems.length;
-  const dayIdx = new Date().getDay();
-  const showCount = 5;
+  const total = allItems.length;  // 150条
+  const dayOfMonth = new Date().getDate();  // 1-31
+  const showCount = 5;  // 每天显示5条
+  const startIdx = ((dayOfMonth - 1) * showCount) % total;
   const todayItems = [];
   for (let i = 0; i < showCount; i++) {
-    todayItems.push(allItems[(dayIdx * showCount + i) % total]);
+    todayItems.push(allItems[(startIdx + i) % total]);
   }
   let html = `<div class="content-card" style="background:linear-gradient(135deg,#FFB3C6,#FFC9DA);color:#fff;">
     <div style="font-size:16px;font-weight:800;">📚 知识库 · 今日5条</div>

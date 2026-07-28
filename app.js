@@ -651,15 +651,14 @@ function renderKnowledge(mod) {
   </div>`;
   html += `<div class="content-card">`;
   todayItems.forEach((k, i) => {
-    const globalIdx = allItems.indexOf(k);
     html += `
-      <div class="knowledge-item" onclick="toggleKnowledge(${globalIdx})">
+      <div class="knowledge-item" onclick="toggleKnowledge(${i})">
         <div class="knowledge-header">
           <span class="knowledge-category">${k.category}</span>
           <span class="knowledge-title-text">${k.title}</span>
-          <span class="knowledge-toggle" id="k-toggle-${globalIdx}">展开</span>
+          <span class="knowledge-toggle" id="k-toggle-${i}">展开</span>
         </div>
-        <div class="knowledge-content" id="k-content-${globalIdx}" style="display:none;">${(k.content || k.body || '').replace(/\n/g, '<br>')}</div>
+        <div class="knowledge-content" id="k-content-${i}" style="display:none;">${(k.content || k.body || '').replace(/\n/g, '<br>')}</div>
       </div>`;
   });
   html += `</div>`;

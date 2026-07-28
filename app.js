@@ -606,13 +606,20 @@ function toggleRetell(idx) {
 // ===== 新闻 =====
 function renderNews(mod) {
   let html = '';
-  // 按月内日期索引：每天显示3条不同新闻，30天不重复
-  const dayOfMonth = new Date().getDate();  // 1-31
-  const perDay = 3;  // 每天显示3条
-  const total = mod.news.length;  // 90条
-  const startIdx = ((dayOfMonth - 1) * perDay) % total;
-  for (let i = 0; i < perDay; i++) {
-    const item = mod.news[(startIdx + i) % total];
+  // 优先使用当天的精简数据，避免加载完整 data.js
+  const todayNews = (typeof DAILY_NEWS !== 'undefined') ? DAILY_NEWS : null;
+  const items = todayNews || (() => {
+    const dayOfMonth = new Date().getDate();
+    const perDay = 3;
+    const total = mod.news.length;
+    const startIdx = ((dayOfMonth - 1) * perDay) % total;
+    const result = [];
+    for (let i = 0; i < perDay; i++) {
+      result.push(mod.news[(startIdx + i) % total]);
+    }
+    return result;
+  })();
+  for (const item of items) {
     html += `<div class="content-card">
       <div class="news-tag">${item.tag}</div>
       <div class="news-title">${item.title}</div>
@@ -624,19 +631,23 @@ function renderNews(mod) {
 
 // ===== 知识拓展 =====
 function renderKnowledge(mod) {
-  // 按月内日期索引：每天显示5条不同知识，30天不重复
+  // 优先使用当天的精简数据，避免加载完整 data.js
+  const todayKnowledge = (typeof DAILY_KNOWLEDGE !== 'undefined') ? DAILY_KNOWLEDGE : null;
   const allItems = mod.items;
   const total = allItems.length;  // 150条
-  const dayOfMonth = new Date().getDate();  // 1-31
-  const showCount = 5;  // 每天显示5条
-  const startIdx = ((dayOfMonth - 1) * showCount) % total;
-  const todayItems = [];
-  for (let i = 0; i < showCount; i++) {
-    todayItems.push(allItems[(startIdx + i) % total]);
-  }
+  const todayItems = todayKnowledge || (() => {
+    const dayOfMonth = new Date().getDate();
+    const showCount = 5;
+    const startIdx = ((dayOfMonth - 1) * showCount) % total;
+    const result = [];
+    for (let i = 0; i < showCount; i++) {
+      result.push(allItems[(startIdx + i) % total]);
+    }
+    return result;
+  })();
   let html = `<div class="content-card" style="background:linear-gradient(135deg,#FFB3C6,#FFC9DA);color:#fff;">
     <div style="font-size:16px;font-weight:800;">📚 知识库 · 今日5条</div>
-    <div style="font-size:13px;opacity:0.9;">共${total}条知识 · 每天5条轮换 · 周日全部可见</div>
+    <div style="font-size:13px;opacity:0.9;">共${total}条知识 · 每天5条轮换</div>
   </div>`;
   html += `<div class="content-card">`;
   todayItems.forEach((k, i) => {
